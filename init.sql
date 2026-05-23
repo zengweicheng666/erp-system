@@ -192,6 +192,206 @@ CREATE TABLE IF NOT EXISTS inv_stock_record (
     create_time DATETIME COMMENT '创建时间'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='库存流水表';
 
+-- ==================== Purchase Module ====================
+
+CREATE TABLE IF NOT EXISTS pur_supplier (
+    supplier_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '供应商ID',
+    supplier_code VARCHAR(50) NOT NULL COMMENT '供应商编码',
+    supplier_name VARCHAR(200) NOT NULL COMMENT '供应商名称',
+    contact_person VARCHAR(50) COMMENT '联系人',
+    phone VARCHAR(20) COMMENT '电话',
+    email VARCHAR(100) COMMENT '邮箱',
+    address VARCHAR(255) COMMENT '地址',
+    tax_id VARCHAR(50) COMMENT '税号',
+    bank_name VARCHAR(100) COMMENT '开户行',
+    bank_account VARCHAR(50) COMMENT '银行账号',
+    status TINYINT DEFAULT 0 COMMENT '状态',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, update_time DATETIME, create_by VARCHAR(50), update_by VARCHAR(50),
+    del_flag CHAR(1) DEFAULT '0',
+    UNIQUE KEY uk_supplier_code (supplier_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='供应商表';
+
+CREATE TABLE IF NOT EXISTS pur_order (
+    order_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '订单ID',
+    order_no VARCHAR(50) NOT NULL COMMENT '订单编号',
+    supplier_id BIGINT COMMENT '供应商ID',
+    order_date DATETIME COMMENT '下单日期',
+    total_amount DECIMAL(12,2) DEFAULT 0 COMMENT '总金额',
+    status TINYINT DEFAULT 0 COMMENT '状态(0草稿 1已提交 2已审核 3已入库 4已取消)',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, update_time DATETIME, create_by VARCHAR(50), update_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='采购订单表';
+
+CREATE TABLE IF NOT EXISTS pur_order_item (
+    item_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '明细ID',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT NOT NULL COMMENT '商品ID',
+    quantity INT DEFAULT 0 COMMENT '数量',
+    unit_price DECIMAL(10,2) COMMENT '单价',
+    total_price DECIMAL(12,2) COMMENT '合计',
+    received_qty INT DEFAULT 0 COMMENT '已收货数量',
+    remark VARCHAR(500) COMMENT '备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='采购订单明细表';
+
+CREATE TABLE IF NOT EXISTS pur_inbound (
+    inbound_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '入库ID',
+    inbound_no VARCHAR(50) COMMENT '入库单号',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    order_no VARCHAR(50) COMMENT '订单编号',
+    warehouse_id BIGINT COMMENT '仓库ID',
+    inbound_date DATETIME COMMENT '入库日期',
+    operator VARCHAR(50) COMMENT '操作人',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='采购入库表';
+
+CREATE TABLE IF NOT EXISTS pur_return (
+    return_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '退货ID',
+    return_no VARCHAR(50) COMMENT '退货单号',
+    supplier_id BIGINT COMMENT '供应商ID',
+    order_id BIGINT COMMENT '订单ID',
+    return_date DATETIME COMMENT '退货日期',
+    total_amount DECIMAL(12,2) COMMENT '总金额',
+    status TINYINT DEFAULT 0 COMMENT '状态',
+    reason VARCHAR(500) COMMENT '退货原因',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='采购退货表';
+
+-- ==================== Sales Module ====================
+
+CREATE TABLE IF NOT EXISTS sal_customer (
+    customer_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '客户ID',
+    customer_code VARCHAR(50) NOT NULL COMMENT '客户编码',
+    customer_name VARCHAR(200) NOT NULL COMMENT '客户名称',
+    contact_person VARCHAR(50) COMMENT '联系人',
+    phone VARCHAR(20) COMMENT '电话',
+    email VARCHAR(100) COMMENT '邮箱',
+    address VARCHAR(255) COMMENT '地址',
+    tax_id VARCHAR(50) COMMENT '税号',
+    bank_name VARCHAR(100) COMMENT '开户行',
+    bank_account VARCHAR(50) COMMENT '银行账号',
+    status TINYINT DEFAULT 0 COMMENT '状态',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, update_time DATETIME, create_by VARCHAR(50), update_by VARCHAR(50),
+    del_flag CHAR(1) DEFAULT '0',
+    UNIQUE KEY uk_customer_code (customer_code)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='客户表';
+
+CREATE TABLE IF NOT EXISTS sal_order (
+    order_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '订单ID',
+    order_no VARCHAR(50) NOT NULL COMMENT '订单编号',
+    customer_id BIGINT COMMENT '客户ID',
+    order_date DATETIME COMMENT '下单日期',
+    total_amount DECIMAL(12,2) DEFAULT 0 COMMENT '总金额',
+    status TINYINT DEFAULT 0 COMMENT '状态(0草稿 1已提交 2已审核 3已出库 4已取消)',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, update_time DATETIME, create_by VARCHAR(50), update_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售订单表';
+
+CREATE TABLE IF NOT EXISTS sal_order_item (
+    item_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '明细ID',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    product_id BIGINT NOT NULL COMMENT '商品ID',
+    quantity INT DEFAULT 0 COMMENT '数量',
+    unit_price DECIMAL(10,2) COMMENT '单价',
+    total_price DECIMAL(12,2) COMMENT '合计',
+    delivered_qty INT DEFAULT 0 COMMENT '已发货数量',
+    remark VARCHAR(500) COMMENT '备注'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售订单明细表';
+
+CREATE TABLE IF NOT EXISTS sal_outbound (
+    outbound_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '出库ID',
+    outbound_no VARCHAR(50) COMMENT '出库单号',
+    order_id BIGINT NOT NULL COMMENT '订单ID',
+    order_no VARCHAR(50) COMMENT '订单编号',
+    warehouse_id BIGINT COMMENT '仓库ID',
+    outbound_date DATETIME COMMENT '出库日期',
+    operator VARCHAR(50) COMMENT '操作人',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售出库表';
+
+CREATE TABLE IF NOT EXISTS sal_return (
+    return_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '退货ID',
+    return_no VARCHAR(50) COMMENT '退货单号',
+    customer_id BIGINT COMMENT '客户ID',
+    order_id BIGINT COMMENT '订单ID',
+    return_date DATETIME COMMENT '退货日期',
+    total_amount DECIMAL(12,2) COMMENT '总金额',
+    status TINYINT DEFAULT 0 COMMENT '状态',
+    reason VARCHAR(500) COMMENT '退货原因',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售退货表';
+
+-- ==================== Finance Module ====================
+
+CREATE TABLE IF NOT EXISTS fin_receivable (
+    receivable_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '应收ID',
+    invoice_no VARCHAR(50) COMMENT '发票号',
+    customer_id BIGINT COMMENT '客户ID',
+    sales_order_id BIGINT COMMENT '销售订单ID',
+    total_amount DECIMAL(12,2) DEFAULT 0 COMMENT '总金额',
+    paid_amount DECIMAL(12,2) DEFAULT 0 COMMENT '已收金额',
+    unsettled_amount DECIMAL(12,2) DEFAULT 0 COMMENT '未收金额',
+    due_date DATE COMMENT '到期日',
+    status TINYINT DEFAULT 0 COMMENT '状态(0未收款 1部分收款 2已收款)',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应收账款表';
+
+CREATE TABLE IF NOT EXISTS fin_payable (
+    payable_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '应付ID',
+    invoice_no VARCHAR(50) COMMENT '发票号',
+    supplier_id BIGINT COMMENT '供应商ID',
+    purchase_order_id BIGINT COMMENT '采购订单ID',
+    total_amount DECIMAL(12,2) DEFAULT 0 COMMENT '总金额',
+    paid_amount DECIMAL(12,2) DEFAULT 0 COMMENT '已付金额',
+    unsettled_amount DECIMAL(12,2) DEFAULT 0 COMMENT '未付金额',
+    due_date DATE COMMENT '到期日',
+    status TINYINT DEFAULT 0 COMMENT '状态(0未付款 1部分付款 2已付款)',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='应付账款表';
+
+CREATE TABLE IF NOT EXISTS fin_receipt (
+    receipt_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '收款单ID',
+    receipt_no VARCHAR(50) COMMENT '收款单号',
+    customer_id BIGINT COMMENT '客户ID',
+    receipt_date DATETIME COMMENT '收款日期',
+    amount DECIMAL(12,2) DEFAULT 0 COMMENT '收款金额',
+    payment_method VARCHAR(50) COMMENT '付款方式',
+    invoice_no VARCHAR(50) COMMENT '发票号',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='收款单表';
+
+CREATE TABLE IF NOT EXISTS fin_payment (
+    payment_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '付款单ID',
+    payment_no VARCHAR(50) COMMENT '付款单号',
+    supplier_id BIGINT COMMENT '供应商ID',
+    payment_date DATETIME COMMENT '付款日期',
+    amount DECIMAL(12,2) DEFAULT 0 COMMENT '付款金额',
+    payment_method VARCHAR(50) COMMENT '付款方式',
+    invoice_no VARCHAR(50) COMMENT '发票号',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='付款单表';
+
+CREATE TABLE IF NOT EXISTS fin_expense (
+    expense_id BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '费用ID',
+    expense_no VARCHAR(50) COMMENT '费用单号',
+    expense_date DATETIME COMMENT '费用日期',
+    expense_type VARCHAR(50) COMMENT '费用类型',
+    amount DECIMAL(12,2) DEFAULT 0 COMMENT '金额',
+    department VARCHAR(50) COMMENT '部门',
+    operator_name VARCHAR(50) COMMENT '经办人',
+    remark VARCHAR(500) COMMENT '备注',
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='费用表';
+
 -- ==================== Init Data ====================
 
 -- Admin user (password: 123456)
@@ -220,9 +420,31 @@ INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component,
 (22, '商品分类', 20, 2, 'category', '/inventory/category/index', 0, '0', '0', 'inventory:category:list', 'FolderOpened', NOW()),
 (23, '仓库管理', 20, 3, 'warehouse', '/inventory/warehouse/index', 0, '0', '0', 'inventory:warehouse:list', 'HomeFilled', NOW()),
 (24, '库存管理', 20, 4, 'stock', '/inventory/stock/index', 0, '0', '0', 'inventory:stock:list', 'Coin', NOW()),
-(25, '库存流水', 20, 5, 'records', '/inventory/stock/records', 0, '0', '0', 'inventory:stock:list', 'List', NOW());
+(25, '库存流水', 20, 5, 'records', '/inventory/stock/records', 0, '0', '0', 'inventory:stock:list', 'List', NOW()),
+
+(30, '采购管理', 0, 3, '/purchase', 'Layout', 0, '0', '0', NULL, 'ShoppingCart', NOW()),
+(31, '供应商管理', 30, 1, 'supplier', '/purchase/supplier/index', 0, '0', '0', 'purchase:supplier:list', 'User', NOW()),
+(32, '采购订单', 30, 2, 'order', '/purchase/order/index', 0, '0', '0', 'purchase:order:list', 'List', NOW()),
+(33, '采购入库', 30, 3, 'inbound', '/purchase/inbound/index', 0, '0', '0', 'purchase:inbound:list', 'Upload', NOW()),
+(34, '采购退货', 30, 4, 'preturn', '/purchase/return/index', 0, '0', '0', 'purchase:return:list', 'RefreshLeft', NOW()),
+
+(40, '销售管理', 0, 4, '/sales', 'Layout', 0, '0', '0', NULL, 'ShoppingBag', NOW()),
+(41, '客户管理', 40, 1, 'customer', '/sales/customer/index', 0, '0', '0', 'sales:customer:list', 'User', NOW()),
+(42, '销售订单', 40, 2, 'order', '/sales/order/index', 0, '0', '0', 'sales:order:list', 'List', NOW()),
+(43, '销售出库', 40, 3, 'outbound', '/sales/outbound/index', 0, '0', '0', 'sales:outbound:list', 'Download', NOW()),
+(44, '销售退货', 40, 4, 'sreturn', '/sales/return/index', 0, '0', '0', 'sales:return:list', 'RefreshRight', NOW()),
+
+(50, '财务管理', 0, 5, '/finance', 'Layout', 0, '0', '0', NULL, 'Coin', NOW()),
+(51, '应收账款', 50, 1, 'receivable', '/finance/receivable/index', 0, '0', '0', 'finance:receivable:list', 'Wallet', NOW()),
+(52, '应付账款', 50, 2, 'payable', '/finance/payable/index', 0, '0', '0', 'finance:payable:list', 'WalletFilled', NOW()),
+(53, '收款单', 50, 3, 'receipt', '/finance/receipt/index', 0, '0', '0', 'finance:receipt:list', 'Money', NOW()),
+(54, '付款单', 50, 4, 'payment', '/finance/payment/index', 0, '0', '0', 'finance:payment:list', 'Money', NOW()),
+(55, '费用管理', 50, 5, 'expense', '/finance/expense/index', 0, '0', '0', 'finance:expense:list', 'Document', NOW());
 
 -- Menu permissions for admin role
 INSERT INTO sys_role_menu (role_id, menu_id) VALUES
 (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6),
-(1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25);
+(1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25),
+(1, 30), (1, 31), (1, 32), (1, 33), (1, 34),
+(1, 40), (1, 41), (1, 42), (1, 43), (1, 44),
+(1, 50), (1, 51), (1, 52), (1, 53), (1, 54), (1, 55);

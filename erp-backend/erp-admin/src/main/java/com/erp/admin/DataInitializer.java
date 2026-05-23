@@ -124,9 +124,72 @@ public class DataInitializer implements CommandLineRunner {
 
         insertMenu("库存流水", invMgr.getMenuId(), 5, "records", "/inventory/stock/records", 0, "List");
 
+        SysMenu purMgr = insertMenu(null, "采购管理", 0L, 3, "/purchase", "Layout", 0, "ShoppingCart");
+        Long supM = insertMenu("供应商管理", purMgr.getMenuId(), 1, "supplier", "/purchase/supplier/index", 0, "User");
+        insertMenu(null, "供应商查询", supM, 1, null, null, 1, null);
+        insertMenu(null, "供应商新增", supM, 2, null, null, 1, null);
+        insertMenu(null, "供应商修改", supM, 3, null, null, 1, null);
+        insertMenu(null, "供应商删除", supM, 4, null, null, 1, null);
+
+        Long poM = insertMenu("采购订单", purMgr.getMenuId(), 2, "order", "/purchase/order/index", 0, "List");
+        insertMenu(null, "采购订单查询", poM, 1, null, null, 1, null);
+        insertMenu(null, "采购订单新增", poM, 2, null, null, 1, null);
+        insertMenu(null, "采购订单修改", poM, 3, null, null, 1, null);
+        insertMenu(null, "采购订单删除", poM, 4, null, null, 1, null);
+
+        Long inboundM = insertMenu("采购入库", purMgr.getMenuId(), 3, "inbound", "/purchase/inbound/index", 0, "Upload");
+        insertMenu(null, "入库查询", inboundM, 1, null, null, 1, null);
+        insertMenu(null, "入库操作", inboundM, 2, null, null, 1, null);
+
+        Long purRetM = insertMenu("采购退货", purMgr.getMenuId(), 4, "preturn", "/purchase/return/index", 0, "RefreshLeft");
+        insertMenu(null, "退货查询", purRetM, 1, null, null, 1, null);
+        insertMenu(null, "退货新增", purRetM, 2, null, null, 1, null);
+
+        SysMenu salMgr = insertMenu(null, "销售管理", 0L, 4, "/sales", "Layout", 0, "ShoppingBag");
+        Long cusM = insertMenu("客户管理", salMgr.getMenuId(), 1, "customer", "/sales/customer/index", 0, "User");
+        insertMenu(null, "客户查询", cusM, 1, null, null, 1, null);
+        insertMenu(null, "客户新增", cusM, 2, null, null, 1, null);
+        insertMenu(null, "客户修改", cusM, 3, null, null, 1, null);
+        insertMenu(null, "客户删除", cusM, 4, null, null, 1, null);
+
+        Long soM = insertMenu("销售订单", salMgr.getMenuId(), 2, "order", "/sales/order/index", 0, "List");
+        insertMenu(null, "销售订单查询", soM, 1, null, null, 1, null);
+        insertMenu(null, "销售订单新增", soM, 2, null, null, 1, null);
+        insertMenu(null, "销售订单修改", soM, 3, null, null, 1, null);
+        insertMenu(null, "销售订单删除", soM, 4, null, null, 1, null);
+
+        Long outboundM = insertMenu("销售出库", salMgr.getMenuId(), 3, "outbound", "/sales/outbound/index", 0, "Download");
+        insertMenu(null, "出库查询", outboundM, 1, null, null, 1, null);
+        insertMenu(null, "出库操作", outboundM, 2, null, null, 1, null);
+
+        Long salRetM = insertMenu("销售退货", salMgr.getMenuId(), 4, "sreturn", "/sales/return/index", 0, "RefreshRight");
+        insertMenu(null, "退货查询", salRetM, 1, null, null, 1, null);
+        insertMenu(null, "退货新增", salRetM, 2, null, null, 1, null);
+
+        SysMenu finMgr = insertMenu(null, "财务管理", 0L, 5, "/finance", "Layout", 0, "Coin");
+        Long recvM = insertMenu("应收账款", finMgr.getMenuId(), 1, "receivable", "/finance/receivable/index", 0, "Wallet");
+        insertMenu(null, "应收查询", recvM, 1, null, null, 1, null);
+        insertMenu(null, "应收新增", recvM, 2, null, null, 1, null);
+        insertMenu(null, "收款操作", recvM, 3, null, null, 1, null);
+
+        Long payM = insertMenu("应付账款", finMgr.getMenuId(), 2, "payable", "/finance/payable/index", 0, "WalletFilled");
+        insertMenu(null, "应付查询", payM, 1, null, null, 1, null);
+        insertMenu(null, "应付新增", payM, 2, null, null, 1, null);
+        insertMenu(null, "付款操作", payM, 3, null, null, 1, null);
+
+        insertMenu("收款单", finMgr.getMenuId(), 3, "receipt", "/finance/receipt/index", 0, "Money");
+        insertMenu("付款单", finMgr.getMenuId(), 4, "payment", "/finance/payment/index", 0, "Money");
+        Long expM = insertMenu("费用管理", finMgr.getMenuId(), 5, "expense", "/finance/expense/index", 0, "Document");
+        insertMenu(null, "费用查询", expM, 1, null, null, 1, null);
+        insertMenu(null, "费用新增", expM, 2, null, null, 1, null);
+        insertMenu(null, "费用删除", expM, 3, null, null, 1, null);
+
         return new Long[]{
                 sysMgr.getMenuId(), userM, roleM, menuM, dictM, logM,
-                invMgr.getMenuId(), prodM, catM, whM, stockM
+                invMgr.getMenuId(), prodM, catM, whM, stockM,
+                purMgr.getMenuId(), supM, poM, inboundM, purRetM,
+                salMgr.getMenuId(), cusM, soM, outboundM, salRetM,
+                finMgr.getMenuId(), recvM, payM, expM
         };
     }
 
@@ -178,6 +241,39 @@ public class DataInitializer implements CommandLineRunner {
                     case "库存查询" -> "inventory:stock:list";
                     case "入库操作" -> "inventory:stock:in";
                     case "出库操作" -> "inventory:stock:out";
+                    case "供应商查询" -> "purchase:supplier:list";
+                    case "供应商新增" -> "purchase:supplier:add";
+                    case "供应商修改" -> "purchase:supplier:edit";
+                    case "供应商删除" -> "purchase:supplier:remove";
+                    case "采购订单查询" -> "purchase:order:list";
+                    case "采购订单新增" -> "purchase:order:add";
+                    case "采购订单修改" -> "purchase:order:edit";
+                    case "采购订单删除" -> "purchase:order:remove";
+                    case "入库查询" -> "purchase:inbound:list";
+                    case "入库操作" -> "purchase:inbound:add";
+                    case "退货查询" -> "purchase:return:list";
+                    case "退货新增" -> "purchase:return:add";
+                    case "客户查询" -> "sales:customer:list";
+                    case "客户新增" -> "sales:customer:add";
+                    case "客户修改" -> "sales:customer:edit";
+                    case "客户删除" -> "sales:customer:remove";
+                    case "销售订单查询" -> "sales:order:list";
+                    case "销售订单新增" -> "sales:order:add";
+                    case "销售订单修改" -> "sales:order:edit";
+                    case "销售订单删除" -> "sales:order:remove";
+                    case "出库查询" -> "sales:outbound:list";
+                    case "出库操作" -> "sales:outbound:add";
+                    case "退货查询" -> "sales:return:list";
+                    case "退货新增" -> "sales:return:add";
+                    case "应收查询" -> "finance:receivable:list";
+                    case "应收新增" -> "finance:receivable:add";
+                    case "收款操作" -> "finance:receivable:edit";
+                    case "应付查询" -> "finance:payable:list";
+                    case "应付新增" -> "finance:payable:add";
+                    case "付款操作" -> "finance:payable:edit";
+                    case "费用查询" -> "finance:expense:list";
+                    case "费用新增" -> "finance:expense:add";
+                    case "费用删除" -> "finance:expense:remove";
                     default -> null;
                 };
             }
