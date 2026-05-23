@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.erp.common.result.PageResult;
 import com.erp.inventory.dto.StockOperateRequest;
+import java.util.List;
 import com.erp.inventory.service.StockService;
 import com.erp.purchase.dto.OrderQuery;
 import com.erp.purchase.entity.PurchaseInbound;
