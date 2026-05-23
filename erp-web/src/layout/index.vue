@@ -14,7 +14,7 @@
         active-text-color="#409eff"
       >
         <template v-for="menu in menuStore.menus" :key="menu.menuId">
-          <el-sub-menu v-if="menu.children && menu.children.length > 0" :index="menu.path">
+          <el-sub-menu v-if="menu.children && menu.children.length > 0" :index="resolvePath(menu.path)">
             <template #title>
               <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
               <span>{{ menu.menuName }}</span>
@@ -22,13 +22,13 @@
             <el-menu-item
               v-for="child in menu.children"
               :key="child.menuId"
-              :index="child.path"
+              :index="resolvePath(menu.path, child.path)"
             >
               <el-icon v-if="child.icon"><component :is="child.icon" /></el-icon>
               <span>{{ child.menuName }}</span>
             </el-menu-item>
           </el-sub-menu>
-          <el-menu-item v-else :index="menu.path">
+          <el-menu-item v-else :index="resolvePath(menu.path)">
             <el-icon v-if="menu.icon"><component :is="menu.icon" /></el-icon>
             <span>{{ menu.menuName }}</span>
           </el-menu-item>
@@ -89,6 +89,13 @@ function handleCommand(command) {
     menuStore.clearMenus()
     router.push('/login')
   }
+}
+
+function resolvePath(parentPath, childPath) {
+  if (!childPath) return parentPath
+  if (childPath.startsWith('/')) return childPath
+  const base = parentPath.endsWith('/') ? parentPath.slice(0, -1) : parentPath
+  return `${base}/${childPath}`
 }
 </script>
 

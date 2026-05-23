@@ -57,18 +57,19 @@ public class DataInitializer implements CommandLineRunner {
         ur.setRoleId(adminRole.getRoleId());
         sysUserRoleMapper.insert(ur);
 
-        Long[] menuIds = createMenus();
-        for (Long menuId : menuIds) {
+        createMenus();
+        java.util.List<SysMenu> allMenus = sysMenuMapper.selectList(null);
+        for (SysMenu menu : allMenus) {
             SysRoleMenu rm = new SysRoleMenu();
             rm.setRoleId(adminRole.getRoleId());
-            rm.setMenuId(menuId);
+            rm.setMenuId(menu.getMenuId());
             sysRoleMenuMapper.insert(rm);
         }
 
         log.info("Default data initialized successfully.");
     }
 
-    private Long[] createMenus() {
+    private void createMenus() {
         Long sysMgr = insertMenu("系统管理", 0L, 1, "/system", "Layout", 0, "Setting");
         Long userM = insertMenu("用户管理", sysMgr, 1, "user", "/system/user/index", 0, "User");
         insertMenu("用户查询", userM, 1, null, null, 1, null);
@@ -122,7 +123,7 @@ public class DataInitializer implements CommandLineRunner {
         insertMenu("入库操作", stockM, 2, null, null, 1, null);
         insertMenu("出库操作", stockM, 3, null, null, 1, null);
 
-        insertMenu("库存流水", invMgr, 5, "records", "/inventory/stock/records", 0, "List");
+        insertMenu("库存流水", invMgr, 5, "stock/records", "/inventory/stock/records", 0, "List");
 
         Long purMgr = insertMenu("采购管理", 0L, 3, "/purchase", "Layout", 0, "ShoppingCart");
         Long supM = insertMenu("供应商管理", purMgr, 1, "supplier", "/purchase/supplier/index", 0, "User");
@@ -177,8 +178,13 @@ public class DataInitializer implements CommandLineRunner {
         insertMenu("应付新增", payM, 2, null, null, 1, null);
         insertMenu("付款操作", payM, 3, null, null, 1, null);
 
-        insertMenu("收款单", finMgr, 3, "receipt", "/finance/receipt/index", 0, "Money");
-        insertMenu("付款单", finMgr, 4, "payment", "/finance/payment/index", 0, "Money");
+        Long receiptM = insertMenu("收款单", finMgr, 3, "receipt", "/finance/receipt/index", 0, "Money");
+        insertMenu("收款单查询", receiptM, 1, null, null, 1, null);
+        insertMenu("收款单新增", receiptM, 2, null, null, 1, null);
+
+        Long paymentM = insertMenu("付款单", finMgr, 4, "payment", "/finance/payment/index", 0, "Money");
+        insertMenu("付款单查询", paymentM, 1, null, null, 1, null);
+        insertMenu("付款单新增", paymentM, 2, null, null, 1, null);
         Long expM = insertMenu("费用管理", finMgr, 5, "expense", "/finance/expense/index", 0, "Document");
         insertMenu("费用查询", expM, 1, null, null, 1, null);
         insertMenu("费用新增", expM, 2, null, null, 1, null);
@@ -224,16 +230,7 @@ public class DataInitializer implements CommandLineRunner {
         insertMenu("联系人", crmMgr, 3, "contact", "/crm/contact/index", 0, "User");
         insertMenu("跟进记录", crmMgr, 4, "followup", "/crm/followup/index", 0, "ChatDotRound");
 
-        return new Long[]{
-                sysMgr, userM, roleM, menuM, dictM, logM,
-                invMgr, prodM, catM, whM, stockM,
-                purMgr, supM, poM, inboundM, purRetM,
-                salMgr, cusM, soM, outboundM, salRetM,
-                finMgr, recvM, payM, expM,
-                proMgr, bomM, prodOrderM,
-                hrMgr, deptM, empM,
-                crmMgr, leadM, oppM
-        };
+        // All menus created above will be assigned to admin role by caller
     }
 
     private Long insertMenu(String name, Long parentId, int order, String path, String component, int menuType, String icon) {
@@ -317,6 +314,10 @@ public class DataInitializer implements CommandLineRunner {
                     case "费用查询" -> "finance:expense:list";
                     case "费用新增" -> "finance:expense:add";
                     case "费用删除" -> "finance:expense:remove";
+                    case "收款单查询" -> "finance:receipt:list";
+                    case "收款单新增" -> "finance:receipt:add";
+                    case "付款单查询" -> "finance:payment:list";
+                    case "付款单新增" -> "finance:payment:add";
                     case "BOM新增" -> "production:bom:add";
                     case "BOM删除" -> "production:bom:remove";
                     case "工单查询" -> "production:order:list";
