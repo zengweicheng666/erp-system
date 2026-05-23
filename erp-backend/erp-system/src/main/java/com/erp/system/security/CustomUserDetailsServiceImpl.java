@@ -1,6 +1,7 @@
 package com.erp.system.security;
 
 import com.erp.framework.security.LoginUser;
+import com.erp.framework.security.UserDetailsServiceImpl;
 import com.erp.system.entity.SysRole;
 import com.erp.system.mapper.SysRoleMapper;
 import com.erp.system.mapper.SysUserMapper;
@@ -9,7 +10,6 @@ import com.erp.system.mapper.SysMenuMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 @Service
 @Primary
 @RequiredArgsConstructor
-public class CustomUserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsServiceImpl extends UserDetailsServiceImpl {
 
     private final SysUserMapper sysUserMapper;
     private final SysRoleMapper sysRoleMapper;
