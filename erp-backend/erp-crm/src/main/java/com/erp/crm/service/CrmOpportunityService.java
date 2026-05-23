@@ -1,0 +1,1 @@
+package com.erp.crm.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.common.result.PageResult; import com.erp.crm.entity.CrmOpportunity; public interface CrmOpportunityService extends IService<CrmOpportunity> { PageResult<CrmOpportunity> listOpportunities(Long customerId, Long page, Long pageSize); }

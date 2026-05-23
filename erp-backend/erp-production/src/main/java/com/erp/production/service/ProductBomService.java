@@ -1,0 +1,1 @@
+package com.erp.production.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.production.entity.ProductBom; import java.util.List; public interface ProductBomService extends IService<ProductBom> { List<ProductBom> getBomByProductId(Long productId); }

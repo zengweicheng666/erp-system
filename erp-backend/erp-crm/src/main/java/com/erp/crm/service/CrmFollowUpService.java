@@ -1,0 +1,1 @@
+package com.erp.crm.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.crm.entity.CrmFollowUp; public interface CrmFollowUpService extends IService<CrmFollowUp> {}

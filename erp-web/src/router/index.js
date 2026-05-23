@@ -87,7 +87,19 @@ const routes = [
       { path: 'finance/payable', name: 'Payable', component: () => import('@/views/finance/payable/index.vue'), meta: { title: '应付账款', icon: 'WalletFilled' } },
       { path: 'finance/receipt', name: 'Receipt', component: () => import('@/views/finance/receipt/index.vue'), meta: { title: '收款单', icon: 'Money' } },
       { path: 'finance/payment', name: 'Payment', component: () => import('@/views/finance/payment/index.vue'), meta: { title: '付款单', icon: 'Money' } },
-      { path: 'finance/expense', name: 'Expense', component: () => import('@/views/finance/expense/index.vue'), meta: { title: '费用管理', icon: 'Document' } }
+      { path: 'finance/expense', name: 'Expense', component: () => import('@/views/finance/expense/index.vue'), meta: { title: '费用管理', icon: 'Document' } },
+      { path: 'production/bom', name: 'Bom', component: () => import('@/views/production/bom/index.vue'), meta: { title: 'BOM管理', icon: 'Link' } },
+      { path: 'production/order', name: 'ProdOrder', component: () => import('@/views/production/order/index.vue'), meta: { title: '生产工单', icon: 'List' } },
+      { path: 'production/process', name: 'ProcessRoute', component: () => import('@/views/production/process/index.vue'), meta: { title: '工艺路线', icon: 'Opportunity' } },
+      { path: 'production/report', name: 'WorkReport', component: () => import('@/views/production/report/index.vue'), meta: { title: '工序报工', icon: 'Finished' } },
+      { path: 'hr/dept', name: 'Dept', component: () => import('@/views/hr/dept/index.vue'), meta: { title: '部门管理', icon: 'FolderOpened' } },
+      { path: 'hr/employee', name: 'Employee', component: () => import('@/views/hr/employee/index.vue'), meta: { title: '员工管理', icon: 'UserFilled' } },
+      { path: 'hr/attendance', name: 'Attendance', component: () => import('@/views/hr/attendance/index.vue'), meta: { title: '考勤管理', icon: 'Calendar' } },
+      { path: 'hr/payroll', name: 'Payroll', component: () => import('@/views/hr/payroll/index.vue'), meta: { title: '薪资管理', icon: 'Money' } },
+      { path: 'crm/lead', name: 'Lead', component: () => import('@/views/crm/lead/index.vue'), meta: { title: '销售线索', icon: 'Phone' } },
+      { path: 'crm/opportunity', name: 'Opportunity', component: () => import('@/views/crm/opportunity/index.vue'), meta: { title: '商机管理', icon: 'Opportunity' } },
+      { path: 'crm/contact', name: 'CrmContact', component: () => import('@/views/crm/contact/index.vue'), meta: { title: '联系人', icon: 'User' } },
+      { path: 'crm/followup', name: 'FollowUp', component: () => import('@/views/crm/followup/index.vue'), meta: { title: '跟进记录', icon: 'ChatDotRound' } }
     ]
   },
   {

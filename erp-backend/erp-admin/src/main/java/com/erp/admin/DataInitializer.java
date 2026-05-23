@@ -184,12 +184,55 @@ public class DataInitializer implements CommandLineRunner {
         insertMenu(null, "费用新增", expM, 2, null, null, 1, null);
         insertMenu(null, "费用删除", expM, 3, null, null, 1, null);
 
+        SysMenu proMgr = insertMenu(null, "生产管理", 0L, 6, "/production", "Layout", 0, "SetUp");
+        Long bomM = insertMenu("BOM管理", proMgr.getMenuId(), 1, "bom", "/production/bom/index", 0, "Link");
+        insertMenu(null, "BOM新增", bomM, 1, null, null, 1, null);
+        insertMenu(null, "BOM删除", bomM, 2, null, null, 1, null);
+        Long prodOrderM = insertMenu("生产工单", proMgr.getMenuId(), 2, "order", "/production/order/index", 0, "List");
+        insertMenu(null, "工单查询", prodOrderM, 1, null, null, 1, null);
+        insertMenu(null, "工单新增", prodOrderM, 2, null, null, 1, null);
+        insertMenu(null, "工单修改", prodOrderM, 3, null, null, 1, null);
+        insertMenu(null, "工单删除", prodOrderM, 4, null, null, 1, null);
+        insertMenu("工艺路线", proMgr.getMenuId(), 3, "process", "/production/process/index", 0, "Opportunity");
+        insertMenu("工序报工", proMgr.getMenuId(), 4, "report", "/production/report/index", 0, "Finished");
+
+        SysMenu hrMgr = insertMenu(null, "人力资源管理", 0L, 7, "/hr", "Layout", 0, "User");
+        Long deptM = insertMenu("部门管理", hrMgr.getMenuId(), 1, "dept", "/hr/dept/index", 0, "FolderOpened");
+        insertMenu(null, "部门查询", deptM, 1, null, null, 1, null);
+        insertMenu(null, "部门新增", deptM, 2, null, null, 1, null);
+        insertMenu(null, "部门修改", deptM, 3, null, null, 1, null);
+        insertMenu(null, "部门删除", deptM, 4, null, null, 1, null);
+        Long empM = insertMenu("员工管理", hrMgr.getMenuId(), 2, "employee", "/hr/employee/index", 0, "UserFilled");
+        insertMenu(null, "员工查询", empM, 1, null, null, 1, null);
+        insertMenu(null, "员工新增", empM, 2, null, null, 1, null);
+        insertMenu(null, "员工修改", empM, 3, null, null, 1, null);
+        insertMenu(null, "员工删除", empM, 4, null, null, 1, null);
+        insertMenu("考勤管理", hrMgr.getMenuId(), 3, "attendance", "/hr/attendance/index", 0, "Calendar");
+        insertMenu("薪资管理", hrMgr.getMenuId(), 4, "payroll", "/hr/payroll/index", 0, "Money");
+
+        SysMenu crmMgr = insertMenu(null, "客户关系管理", 0L, 8, "/crm", "Layout", 0, "Connection");
+        Long leadM = insertMenu("销售线索", crmMgr.getMenuId(), 1, "lead", "/crm/lead/index", 0, "Phone");
+        insertMenu(null, "线索查询", leadM, 1, null, null, 1, null);
+        insertMenu(null, "线索新增", leadM, 2, null, null, 1, null);
+        insertMenu(null, "线索修改", leadM, 3, null, null, 1, null);
+        insertMenu(null, "线索删除", leadM, 4, null, null, 1, null);
+        Long oppM = insertMenu("商机管理", crmMgr.getMenuId(), 2, "opportunity", "/crm/opportunity/index", 0, "Opportunity");
+        insertMenu(null, "商机查询", oppM, 1, null, null, 1, null);
+        insertMenu(null, "商机新增", oppM, 2, null, null, 1, null);
+        insertMenu(null, "商机修改", oppM, 3, null, null, 1, null);
+        insertMenu(null, "商机删除", oppM, 4, null, null, 1, null);
+        insertMenu("联系人", crmMgr.getMenuId(), 3, "contact", "/crm/contact/index", 0, "User");
+        insertMenu("跟进记录", crmMgr.getMenuId(), 4, "followup", "/crm/followup/index", 0, "ChatDotRound");
+
         return new Long[]{
                 sysMgr.getMenuId(), userM, roleM, menuM, dictM, logM,
                 invMgr.getMenuId(), prodM, catM, whM, stockM,
                 purMgr.getMenuId(), supM, poM, inboundM, purRetM,
                 salMgr.getMenuId(), cusM, soM, outboundM, salRetM,
-                finMgr.getMenuId(), recvM, payM, expM
+                finMgr.getMenuId(), recvM, payM, expM,
+                proMgr.getMenuId(), bomM, prodOrderM,
+                hrMgr.getMenuId(), deptM, empM,
+                crmMgr.getMenuId(), leadM, oppM
         };
     }
 
@@ -274,6 +317,28 @@ public class DataInitializer implements CommandLineRunner {
                     case "费用查询" -> "finance:expense:list";
                     case "费用新增" -> "finance:expense:add";
                     case "费用删除" -> "finance:expense:remove";
+                    case "BOM新增" -> "production:bom:add";
+                    case "BOM删除" -> "production:bom:remove";
+                    case "工单查询" -> "production:order:list";
+                    case "工单新增" -> "production:order:add";
+                    case "工单修改" -> "production:order:edit";
+                    case "工单删除" -> "production:order:remove";
+                    case "部门查询" -> "hr:dept:list";
+                    case "部门新增" -> "hr:dept:add";
+                    case "部门修改" -> "hr:dept:edit";
+                    case "部门删除" -> "hr:dept:remove";
+                    case "员工查询" -> "hr:employee:list";
+                    case "员工新增" -> "hr:employee:add";
+                    case "员工修改" -> "hr:employee:edit";
+                    case "员工删除" -> "hr:employee:remove";
+                    case "线索查询" -> "crm:lead:list";
+                    case "线索新增" -> "crm:lead:add";
+                    case "线索修改" -> "crm:lead:edit";
+                    case "线索删除" -> "crm:lead:remove";
+                    case "商机查询" -> "crm:opportunity:list";
+                    case "商机新增" -> "crm:opportunity:add";
+                    case "商机修改" -> "crm:opportunity:edit";
+                    case "商机删除" -> "crm:opportunity:remove";
                     default -> null;
                 };
             }

@@ -1,0 +1,1 @@
+package com.erp.hr.mapper; import com.baomidou.mybatisplus.core.mapper.BaseMapper; import com.erp.hr.entity.Employee; public interface EmployeeMapper extends BaseMapper<Employee> {}

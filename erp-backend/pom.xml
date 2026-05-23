@@ -34,6 +34,9 @@
         <module>erp-purchase</module>
         <module>erp-sales</module>
         <module>erp-finance</module>
+        <module>erp-production</module>
+        <module>erp-hr</module>
+        <module>erp-crm</module>
         <module>erp-admin</module>
     </modules>
 
@@ -72,6 +75,21 @@
             <dependency>
                 <groupId>com.erp</groupId>
                 <artifactId>erp-finance</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.erp</groupId>
+                <artifactId>erp-production</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.erp</groupId>
+                <artifactId>erp-hr</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.erp</groupId>
+                <artifactId>erp-crm</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -1,0 +1,1 @@
+package com.erp.crm.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.common.result.PageResult; import com.erp.crm.entity.CrmLead; public interface CrmLeadService extends IService<CrmLead> { PageResult<CrmLead> listLeads(String name, Integer status, Long page, Long pageSize); }

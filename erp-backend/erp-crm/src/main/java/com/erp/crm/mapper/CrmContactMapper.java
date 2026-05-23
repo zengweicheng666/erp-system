@@ -1,0 +1,1 @@
+package com.erp.crm.mapper; import com.baomidou.mybatisplus.core.mapper.BaseMapper; import com.erp.crm.entity.CrmContact; public interface CrmContactMapper extends BaseMapper<CrmContact> {}

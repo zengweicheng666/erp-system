@@ -1,0 +1,1 @@
+package com.erp.production.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.production.entity.ProcessRoute; public interface ProcessRouteService extends IService<ProcessRoute> {}

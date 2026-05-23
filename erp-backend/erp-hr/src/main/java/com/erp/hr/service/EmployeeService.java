@@ -1,0 +1,1 @@
+package com.erp.hr.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.common.result.PageResult; import com.erp.hr.entity.Employee; public interface EmployeeService extends IService<Employee> { PageResult<Employee> listEmployees(String name, Long deptId, Long page, Long pageSize); }

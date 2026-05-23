@@ -1,0 +1,1 @@
+package com.erp.production.mapper; import com.baomidou.mybatisplus.core.mapper.BaseMapper; import com.erp.production.entity.ProductBom; public interface ProductBomMapper extends BaseMapper<ProductBom> {}

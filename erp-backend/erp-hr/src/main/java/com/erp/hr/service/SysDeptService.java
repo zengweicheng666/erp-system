@@ -1,0 +1,1 @@
+package com.erp.hr.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.hr.entity.SysDept; import java.util.List; public interface SysDeptService extends IService<SysDept> { List<SysDept> listDepts(); List<SysDept> buildTree(List<SysDept> depts); }

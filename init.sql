@@ -392,6 +392,110 @@ CREATE TABLE IF NOT EXISTS fin_expense (
     create_time DATETIME, create_by VARCHAR(50)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='费用表';
 
+-- ==================== Production Module ====================
+
+CREATE TABLE IF NOT EXISTS pro_bom (
+    bom_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    product_id BIGINT NOT NULL, component_id BIGINT NOT NULL,
+    quantity INT DEFAULT 1, remark VARCHAR(500),
+    create_time DATETIME, update_time DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='BOM表';
+
+CREATE TABLE IF NOT EXISTS pro_order (
+    order_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_no VARCHAR(50), product_id BIGINT,
+    quantity INT DEFAULT 0, produced_qty INT DEFAULT 0,
+    plan_start DATETIME, plan_end DATETIME,
+    status TINYINT DEFAULT 0 COMMENT '0待生产 1生产中 2已完成',
+    remark VARCHAR(500), create_time DATETIME, update_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='生产工单表';
+
+CREATE TABLE IF NOT EXISTS pro_process_route (
+    process_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    process_name VARCHAR(100), product_id BIGINT,
+    process_order INT DEFAULT 0, work_center VARCHAR(100),
+    prepare_time INT DEFAULT 0, process_time INT DEFAULT 0,
+    remark VARCHAR(500), create_time DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工艺路线表';
+
+CREATE TABLE IF NOT EXISTS pro_work_report (
+    report_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    order_id BIGINT, process_id BIGINT,
+    reported_qty INT DEFAULT 0, qualified_qty INT DEFAULT 0,
+    defect_qty INT DEFAULT 0, worker VARCHAR(50),
+    report_time DATETIME, remark VARCHAR(500),
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='工序报工表';
+
+-- ==================== HR Module ====================
+
+CREATE TABLE IF NOT EXISTS sys_dept (
+    dept_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    dept_name VARCHAR(50) NOT NULL, parent_id BIGINT DEFAULT 0,
+    order_num INT DEFAULT 0, leader VARCHAR(50),
+    phone VARCHAR(20), status TINYINT DEFAULT 0,
+    create_time DATETIME
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='部门表';
+
+CREATE TABLE IF NOT EXISTS hr_employee (
+    employee_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_no VARCHAR(50) NOT NULL, employee_name VARCHAR(50) NOT NULL,
+    gender CHAR(1), birth_date DATE, phone VARCHAR(20), email VARCHAR(100),
+    dept_id BIGINT, position VARCHAR(50), hire_date DATE,
+    status TINYINT DEFAULT 0, remark VARCHAR(500),
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='员工表';
+
+CREATE TABLE IF NOT EXISTS hr_attendance (
+    attendance_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT, attendance_date DATE,
+    attendance_type TINYINT COMMENT '0正常 1迟到 2早退 3缺勤 4加班',
+    remark VARCHAR(500), create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='考勤表';
+
+CREATE TABLE IF NOT EXISTS hr_payroll (
+    payroll_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    employee_id BIGINT, period VARCHAR(20),
+    base_salary DECIMAL(12,2) DEFAULT 0,
+    bonus DECIMAL(12,2) DEFAULT 0,
+    deduction DECIMAL(12,2) DEFAULT 0,
+    net_salary DECIMAL(12,2) DEFAULT 0,
+    status TINYINT DEFAULT 0, remark VARCHAR(500),
+    create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='薪资表';
+
+-- ==================== CRM Module ====================
+
+CREATE TABLE IF NOT EXISTS crm_lead (
+    lead_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    lead_name VARCHAR(100) NOT NULL, company VARCHAR(200),
+    phone VARCHAR(20), email VARCHAR(100),
+    source VARCHAR(50), status TINYINT DEFAULT 0,
+    remark VARCHAR(500), create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='销售线索表';
+
+CREATE TABLE IF NOT EXISTS crm_opportunity (
+    opportunity_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    opportunity_name VARCHAR(200) NOT NULL, customer_id BIGINT,
+    expected_amount DECIMAL(12,2) DEFAULT 0,
+    probability INT DEFAULT 0, stage INT DEFAULT 0,
+    remark VARCHAR(500), create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='商机表';
+
+CREATE TABLE IF NOT EXISTS crm_contact (
+    contact_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    contact_name VARCHAR(50) NOT NULL, customer_id BIGINT,
+    phone VARCHAR(20), email VARCHAR(100), position VARCHAR(50),
+    remark VARCHAR(500), create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='联系人表';
+
+CREATE TABLE IF NOT EXISTS crm_follow_up (
+    follow_up_id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    customer_id BIGINT, lead_id BIGINT, opportunity_id BIGINT,
+    content TEXT, follow_up_type VARCHAR(50),
+    follow_up_date DATETIME, create_time DATETIME, create_by VARCHAR(50)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='跟进记录表';
+
 -- ==================== Init Data ====================
 
 -- Admin user (password: 123456)
@@ -439,7 +543,25 @@ INSERT INTO sys_menu (menu_id, menu_name, parent_id, order_num, path, component,
 (52, '应付账款', 50, 2, 'payable', '/finance/payable/index', 0, '0', '0', 'finance:payable:list', 'WalletFilled', NOW()),
 (53, '收款单', 50, 3, 'receipt', '/finance/receipt/index', 0, '0', '0', 'finance:receipt:list', 'Money', NOW()),
 (54, '付款单', 50, 4, 'payment', '/finance/payment/index', 0, '0', '0', 'finance:payment:list', 'Money', NOW()),
-(55, '费用管理', 50, 5, 'expense', '/finance/expense/index', 0, '0', '0', 'finance:expense:list', 'Document', NOW());
+(55, '费用管理', 50, 5, 'expense', '/finance/expense/index', 0, '0', '0', 'finance:expense:list', 'Document', NOW()),
+
+(60, '生产管理', 0, 6, '/production', 'Layout', 0, '0', '0', NULL, 'SetUp', NOW()),
+(61, 'BOM管理', 60, 1, 'bom', '/production/bom/index', 0, '0', '0', 'production:bom:list', 'Link', NOW()),
+(62, '生产工单', 60, 2, 'order', '/production/order/index', 0, '0', '0', 'production:order:list', 'List', NOW()),
+(63, '工艺路线', 60, 3, 'process', '/production/process/index', 0, '0', '0', 'production:process:list', 'Opportunity', NOW()),
+(64, '工序报工', 60, 4, 'report', '/production/report/index', 0, '0', '0', 'production:report:list', 'Finished', NOW()),
+
+(70, '人力资源管理', 0, 7, '/hr', 'Layout', 0, '0', '0', NULL, 'User', NOW()),
+(71, '部门管理', 70, 1, 'dept', '/hr/dept/index', 0, '0', '0', 'hr:dept:list', 'FolderOpened', NOW()),
+(72, '员工管理', 70, 2, 'employee', '/hr/employee/index', 0, '0', '0', 'hr:employee:list', 'UserFilled', NOW()),
+(73, '考勤管理', 70, 3, 'attendance', '/hr/attendance/index', 0, '0', '0', 'hr:attendance:list', 'Calendar', NOW()),
+(74, '薪资管理', 70, 4, 'payroll', '/hr/payroll/index', 0, '0', '0', 'hr:payroll:list', 'Money', NOW()),
+
+(80, '客户关系管理', 0, 8, '/crm', 'Layout', 0, '0', '0', NULL, 'Connection', NOW()),
+(81, '销售线索', 80, 1, 'lead', '/crm/lead/index', 0, '0', '0', 'crm:lead:list', 'Phone', NOW()),
+(82, '商机管理', 80, 2, 'opportunity', '/crm/opportunity/index', 0, '0', '0', 'crm:opportunity:list', 'Opportunity', NOW()),
+(83, '联系人', 80, 3, 'contact', '/crm/contact/index', 0, '0', '0', 'crm:contact:list', 'User', NOW()),
+(84, '跟进记录', 80, 4, 'followup', '/crm/followup/index', 0, '0', '0', 'crm:followup:list', 'ChatDotRound', NOW());
 
 -- Menu permissions for admin role
 INSERT INTO sys_role_menu (role_id, menu_id) VALUES
@@ -447,4 +569,7 @@ INSERT INTO sys_role_menu (role_id, menu_id) VALUES
 (1, 20), (1, 21), (1, 22), (1, 23), (1, 24), (1, 25),
 (1, 30), (1, 31), (1, 32), (1, 33), (1, 34),
 (1, 40), (1, 41), (1, 42), (1, 43), (1, 44),
-(1, 50), (1, 51), (1, 52), (1, 53), (1, 54), (1, 55);
+(1, 50), (1, 51), (1, 52), (1, 53), (1, 54), (1, 55),
+(1, 60), (1, 61), (1, 62), (1, 63), (1, 64),
+(1, 70), (1, 71), (1, 72), (1, 73), (1, 74),
+(1, 80), (1, 81), (1, 82), (1, 83), (1, 84);

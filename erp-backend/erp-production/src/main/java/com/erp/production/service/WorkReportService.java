@@ -1,0 +1,1 @@
+package com.erp.production.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.production.entity.WorkReport; public interface WorkReportService extends IService<WorkReport> {}

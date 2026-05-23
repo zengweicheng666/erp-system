@@ -1,0 +1,1 @@
+package com.erp.hr.service; import com.baomidou.mybatisplus.extension.service.IService; import com.erp.hr.entity.Attendance; public interface AttendanceService extends IService<Attendance> {}

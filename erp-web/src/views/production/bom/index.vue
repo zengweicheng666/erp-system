@@ -1,0 +1,2 @@
+<template><div class="page-container"><el-table :data="tableData" border stripe v-loading="loading"><el-table-column prop="productId" label="成品ID"/><el-table-column prop="componentId" label="组件ID"/><el-table-column prop="quantity" label="用量"/></el-table></div></template>
+<script setup>import {ref,onMounted}from 'vue';import {listBom}from '@/api/production';const loading=ref(false);const tableData=ref([]);onMounted(async()=>{loading.value=true;try{const res=await listBom(1);tableData.value=res.data}finally{loading.value=false}})</script>
