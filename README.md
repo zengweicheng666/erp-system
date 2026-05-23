@@ -1,55 +1,57 @@
-# ERP System
+# ERP 管理系统
 
-A full-featured Enterprise Resource Planning system built with Spring Boot 3 + Vue 3.
+[English](README_en.md)
 
-## Modules
+基于 Spring Boot 3 + Vue 3 的企业资源计划管理系统，覆盖核心业务全流程。
 
-| Module | Features |
+## 功能模块
+
+| 模块 | 功能 |
 |---|---|
-| **System** | User, Role, Menu, Dict, Operation Log |
-| **Inventory** | Product, Category, Warehouse, Stock In/Out, Stock Records |
-| **Purchase** | Supplier, Purchase Order, Inbound, Return |
-| **Sales** | Customer, Sales Order, Outbound, Return |
-| **Finance** | Receivable, Payable, Receipt, Payment, Expense |
-| **Production** | BOM, Production Order, Process Route, Work Report |
-| **HR** | Department, Employee, Attendance, Payroll |
-| **CRM** | Lead, Opportunity, Contact, Follow-up |
+| **系统管理** | 用户、角色、菜单、字典、操作日志 |
+| **库存管理** | 商品、分类、仓库、入库/出库、库存流水 |
+| **采购管理** | 供应商、采购订单、采购入库、采购退货 |
+| **销售管理** | 客户、销售订单、销售出库、销售退货 |
+| **财务管理** | 应收/应付账款、收款单/付款单、费用管理 |
+| **生产管理** | BOM 物料清单、生产工单、工艺路线、工序报工 |
+| **人力资源管理** | 部门、员工档案、考勤、薪资 |
+| **客户关系管理** | 销售线索、商机、联系人、跟进记录 |
 
-## Tech Stack
+## 技术栈
 
-| Layer | Technology |
+| 层级 | 技术 |
 |---|---|
-| Backend | Spring Boot 3.2, MyBatis Plus 3.5, Spring Security, JWT |
-| Frontend | Vue 3, Element Plus, Pinia, Vue Router 4, Axios |
-| Database | MySQL 8 (Docker), schema auto-init |
-| Build | Maven (multi-module), Vite 8 |
+| 后端 | Spring Boot 3.2, MyBatis Plus 3.5, Spring Security, JWT |
+| 前端 | Vue 3, Element Plus, Pinia, Vue Router 4, Axios |
+| 数据库 | MySQL 8（Docker），自动初始化表结构 |
+| 构建 | Maven（多模块），Vite 8 |
 
-## Quick Start
+## 快速开始
 
-### Prerequisites
+### 环境要求
 
 - Java 17+
 - Node.js 20+
-- Docker Desktop (for MySQL) or a local MySQL 8 instance
+- Docker Desktop（用于 MySQL）或本地 MySQL 8 实例
 
-### 1. Start MySQL
+### 1. 启动 MySQL
 
 ```bash
 docker compose up -d
 ```
 
-The `init.sql` script is automatically loaded on first container start. Alternatively, the `DataInitializer` seeds default data (admin user, menus) when the backend starts with an empty database.
+首次启动时 `init.sql` 会自动执行建表。同时 `DataInitializer` 在数据库为空时自动初始化默认管理员账号和菜单数据。
 
-### 2. Start Backend
+### 2. 启动后端
 
 ```bash
 cd erp-backend
 mvn spring-boot:run -pl erp-admin
 ```
 
-API docs available at: http://localhost:8080/doc.html
+API 文档地址：http://localhost:8080/doc.html
 
-### 3. Start Frontend
+### 3. 启动前端
 
 ```bash
 cd erp-web
@@ -57,43 +59,43 @@ npm install
 npm run dev
 ```
 
-Open http://localhost:3000
+打开浏览器访问 http://localhost:3000
 
-### Default Login
+### 默认登录
 
-- Username: `admin`
-- Password: `123456`
+- 用户名：`admin`
+- 密码：`123456`
 
-## Project Structure
+## 项目结构
 
 ```
 erp-system/
-├── erp-backend/          # Maven multi-module Spring Boot project
-│   ├── erp-common/       # Shared DTOs, exceptions, constants
-│   ├── erp-framework/    # Security config, JWT, MyBatis Plus config
-│   ├── erp-system/       # RBAC management
-│   ├── erp-inventory/    # Inventory management
-│   ├── erp-purchase/     # Purchase management
-│   ├── erp-sales/        # Sales management
-│   ├── erp-finance/      # Financial management
-│   ├── erp-production/   # Production management
-│   ├── erp-hr/           # Human resources
-│   ├── erp-crm/          # Customer relationship management
-│   └── erp-admin/        # Application entry point + DataInitializer
-├── erp-web/              # Vue 3 frontend
-├── docker-compose.yml    # MySQL 8 container
-├── init.sql              # Database schema + seed data
-└── AGENTS.md             # Agent onboarding guide
+├── erp-backend/          # Maven 多模块 Spring Boot 项目
+│   ├── erp-common/       # 公共 DTO、异常处理、常量
+│   ├── erp-framework/    # 安全配置、JWT、MyBatis Plus 配置
+│   ├── erp-system/       # RBAC 权限管理
+│   ├── erp-inventory/    # 库存管理
+│   ├── erp-purchase/     # 采购管理
+│   ├── erp-sales/        # 销售管理
+│   ├── erp-finance/      # 财务管理
+│   ├── erp-production/   # 生产管理
+│   ├── erp-hr/           # 人力资源管理
+│   ├── erp-crm/          # 客户关系管理
+│   └── erp-admin/        # 应用入口 + DataInitializer
+├── erp-web/              # Vue 3 前端
+├── docker-compose.yml    # MySQL 8 容器配置
+├── init.sql              # 数据库全量建表 + 初始数据
+└── AGENTS.md             # AI 助手快速上手指南
 ```
 
-## Architecture Highlights
+## 架构特点
 
-- **RBAC Permissions**: Role-based access control with per-button permission checks via `@PreAuthorize` (backend) and `v-hasPerm` directive (frontend)
-- **JWT Auth**: Stateless token authentication, token stored in `Authorization: Bearer <token>` header
-- **Logical Delete**: All major entities use `delFlag` column (`0` = active, `1` = deleted)
-- **Auto Fill**: `createTime`, `updateTime`, `createBy`, `updateBy` are auto-populated by MyBatis Plus
-- **Data Initializer**: Seeds default admin user, roles, and menus on first startup
-- **Auto Stock Sync**: Purchase inbound and sales outbound automatically update inventory
+- **RBAC 权限**：基于角色的访问控制，后端 `@PreAuthorize` + 前端 `v-hasPerm` 指令实现按钮级鉴权
+- **JWT 认证**：无状态 Token 认证，通过 `Authorization: Bearer <token>` 请求头传递
+- **逻辑删除**：主要实体均使用 `delFlag` 字段（`0`=正常，`1`=删除）
+- **自动填充**：`createTime`、`updateTime`、`createBy`、`updateBy` 由 MyBatis Plus 自动填充
+- **数据初始化**：首次启动时自动创建管理员、角色、菜单
+- **库存联动**：采购入库和销售出库自动更新库存数量
 
 ## License
 
